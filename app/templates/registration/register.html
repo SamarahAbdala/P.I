@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffe6f2; 
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box; 
+            padding-top: 700px; 
+        }
+        .register-container {
+            background-color: #ffd6e6; 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; 
+            text-align: center;
+        }
+
+        .register-container h2 {
+            color: #cc0052;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .register-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+        }
+
+        .register-container form input {
+            padding: 12px; 
+            border: 1px solid #ff99cc; 
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+
+        .register-container form button {
+            padding: 12px;
+            background-color: #ff66b2; 
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; 
+        }
+
+        .register-container form button:hover {
+            background-color: #e60073; 
+        }
+
+        @media (max-width: 600px) {
+            .register-container {
+                padding: 20px;
+                width: 90%; 
+            }
+
+            .register-container h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Registrar</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Criar conta</button>
+        </form>
+    </div>
+</body>
+</html>

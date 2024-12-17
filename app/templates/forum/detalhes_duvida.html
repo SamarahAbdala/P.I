@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes - S-Beauty</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+    .footer {
+        background: linear-gradient(to right, #fd2393, #fa78a3);
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        bottom: 0; 
+        left: 0; 
+        z-index: 1000; 
+    }
+    section {
+        width: 1000px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 40px auto; 
+    }
+    h2, h3 {
+        color: #cc0052;
+        margin-bottom: 15px;
+    }
+    p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    .comentario-item {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .comentario-item .autor {
+        font-weight: bold;
+        color: #cc0052;
+    }
+    .comentario-item .data-criacao {
+        color: #999;
+        font-size: 12px;
+    }
+    .comentario-item .texto {
+        margin-top: 5px;
+    }
+    .comentario-item .acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .voltar{
+        color: #cc0052;
+    }
+    .voltar:hover{
+        text-decoration: underline;
+    }
+    .button {
+        background-color: #ff66b2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 0 5px; 
+    }
+    .button:hover {
+        background-color: #e60073;
+    }
+    .comentar {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .comentar button {
+        background-color: #ff66b2;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+    .comentar button:hover {
+        background-color: #e60073;
+    }
+    .comenta {
+        display: flex;
+        flex-direction: column;  
+        align-items: center;     
+        justify-content: center; 
+        margin-top: 10px;        
+    }
+    input, textarea, select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: #ff66b2;
+        outline: none;
+    }
+    .editar, .excluir {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
+    .editar {
+        color: #e60073;
+        border: 1.8px solid #ff1f68;
+    }
+    .editar:hover {
+        background-color: #e60073;
+        color: #fff;
+    }
+    .excluir {
+        background-color: #e60073;
+        color: white;
+    }
+    .excluir:hover {
+        border: 1.8px solid #ff1f68;
+        color: #fff;
+    }
+</style>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo S-Beauty">
+            <h1>S-Beauty</h1>
+        </div>
+        <nav>
+            <a href="{% url 'index' %}" class="button">Home</a>
+            <a href="https://forms.gle/5zHggTaqJDHy2kv38" class="button">Contato</a>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="button">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Detalhes</h2>
+        <p><strong>Produto:</strong> {{ duvida.titulo }}</p>
+        <p><strong>Experiência:</strong> {{ duvida.duvida }}</p>
+        <p><strong>Autor:</strong> {{ duvida.autor }}</p>
+
+        <h2>Comentários</h2>
+        <div>
+            {% for comentario in comentarios %}
+            <div class="comentario-item">
+                <div>
+                    <span class="autor">{{ comentario.autor }}:</span>
+                    <span class="data-criacao">{{ comentario.data_criacao }}</span>
+                </div>
+                <div class="texto">{{ comentario.texto }}</div>
+                {% if request.user == comentario.autor or request.user.is_superuser %}
+                <div class="acoes">
+                    <a href="{% url 'edita_comentario' comentario.id %}" class="editar">Editar</a>
+                    <form method="post" action="{% url 'exclui_comentario' comentario.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="excluir" onclick="return confirm('Tem certeza que deseja excluir este comentário?');">Excluir</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <li>Não há comentários ainda.</li>
+            {% endfor %}
+        </div>
+
+        <div class="comenta">
+            <h3>Adicionar Comentário</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="comentar">
+                    <button type="submit" class="button">Comentar</button>
+                </div>
+            </form>
+        </div>
+        <div class="voltar">
+            <a href="{% url 'lista_duvidas' %}">Voltar para a lista</a>
+        </div>
+    </section>
+
+    <div class="footer">
+        <p>“A beleza começa no momento em que você decide ser você mesma.”</p>
+    </div>
+
+</body>
+</html>

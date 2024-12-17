@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-Beauty</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo S-Beauty">
+            <h1>S-Beauty</h1>
+        </div>
+        {% if user.is_authenticated %}
+        <nav>
+            <a href="{% url 'index' %}" class="button">Home</a>
+            <a href="https://forms.gle/5zHggTaqJDHy2kv38" class="button">Contato</a>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="button">Logout</button> 
+            </form>
+        </nav>
+        {% else %}
+        <nav>
+            <a href="{% url 'login' %}" class="button">Login</a>
+            <a href="{% url 'register' %}" class="button">Cadastro</a>
+        </nav>
+        {% endif %}
+    </header>
+
+    <main>
+        <section class="welcome-section">
+            {% if user.is_authenticated %}
+            <h2>Seja Bem-vindo(a), 
+                {% if user.is_authenticated %}
+                    {{ user.username }}
+                {% endif %}
+            </h2>
+            <p>Escolha o que deseja fazer:</p>
+            <div class="options">
+                <div class="option">
+                    <p>Responda o questionário e ache os melhores produtos para você!</p>
+                    <a href="{% url 'quiz' %}" class="button">Responder Quiz</a>
+                </div>
+                <div class="option">
+                    <p>Compartilhe sobre suas compras em nosso fórum</p>
+                    <a href="{% url 'lista_duvidas' %}" class="button">Fórum de Experiências</a>
+                </div>
+                <div class="option">
+                    <p>Visitar meu perfil</p>
+                    <a href="{% url 'perfil' %}" class="button">Ir para o Perfil</a>
+                </div>
+            </div>
+            {% else %}
+            <h2>Seja Bem-vindo(a)!!</h2>
+            <p>Faça login ou se cadastre para conhecer nosso site</p>
+            <h3>Somos revendedores de:</h3>
+            <div class="brands">
+                <a href="https://www.natura.com.br" target="_blank">
+                    <img src="{% static 'images/natura.png' %}" alt="Natura">
+                </a>
+                <a href="https://www.boticario.com.br" target="_blank">
+                    <img src="{% static 'images/oboticario.png' %}" alt="O Boticário">
+                </a>
+                <a href="https://www.avon.com.br" target="_blank">
+                    <img src="{% static 'images/avon.png' %}" alt="Avon">
+                </a>
+            </div>            
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>“A beleza começa no momento em que você decide ser você mesma.”</p>
+    </footer>
+</body>
+</html>

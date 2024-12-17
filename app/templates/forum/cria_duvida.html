@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Dúvida - S-Beauty</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        section {
+            padding: 20px;
+            margin: 20px auto;
+            width: 600px;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            color: #cc0052;
+            text-align: center;          
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            gap: 15px; 
+            width: 100%;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff66b2;
+            outline: none;
+        }
+
+        button {
+            background-color: #ff66b2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e60073;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #ff66b2;
+            color: white;
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        ul li {
+            margin: 5px 0;
+            color: #cc0052;
+        }
+        .footer {
+            background: linear-gradient(to right, #fd2393, #fa78a3);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            bottom: 0; 
+            
+            left: 0; 
+            z-index: 1000; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo S-Beauty">
+            <h1>S-Beauty</h1>
+        </div>
+        <nav>
+                <a href="{% url 'index' %}" class="button">Home</a>
+                <a href="https://forms.gle/5zHggTaqJDHy2kv38" class="button">Contato</a>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="button">Logout</button> 
+                </form>
+            </nav>
+    </header>
+
+<section>
+    <div class="title">
+    <h1>Nova Experiência</h1>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar</button>
+    </form>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+
+<div class="footer">
+    <p>“A beleza começa no momento em que você decide ser você mesma.”</p>
+</div>
+</body>
+</html>

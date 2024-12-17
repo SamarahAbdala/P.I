@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - S-Beauty</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+
+        section {
+            padding: 20px;
+            background-color: #ffd6e6; 
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            color: #cc0052; 
+            margin-bottom: 20px;
+        }
+
+        section div p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        section div a, section div button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: #ff66b2;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        section div a:hover, section div button:hover {
+            background-color: #e60073;
+        }
+
+        .disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            background: linear-gradient(to right, #fd2393, #fa78a3); 
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% if user.is_superuser %}
+    <div class="superuser-warning">
+        Aviso: Você está logado como superusuário. Algumas funcionalidades podem não funcionar como esperado.
+    </div>
+    {% endif %}
+
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo S-Beauty">
+            <h1>S-Beauty</h1>
+        </div>
+        <nav>
+            <a href="{% url 'index' %}" class="button">Home</a>
+            <a href="https://forms.gle/5zHggTaqJDHy2kv38" class="button">Contato</a>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="button">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Meu Perfil</h2>
+        <div>
+            <p><strong>Nome de Usuário:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {% if usuario %}
+                <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+                <p><strong>Data de Nascimento:</strong> {{ usuario.datanasc }}</p>
+                <p><strong>CPF:</strong> {{ usuario.cpf }}</p>
+            {% else %}
+                <p><strong>Perfil não encontrado.</strong></p>
+            {% endif %}
+        </div>
+
+        <div>
+            {% if user.is_superuser %}
+
+                <a href="{% url 'admin:index' %}" class="button">Área de Administração</a>
+            {% else %}
+                <a href="{% url 'editar_perfil' %}" class="button">Editar Perfil</a>
+            {% endif %}
+            
+            {% if user.is_superuser %}
+
+                
+                <button type="button" onclick="confirmarExclusao()" class="disabled">Excluir Conta</button>
+            {% else %}
+     
+                <button type="button" onclick="confirmarExclusao()" class="button">Excluir Conta</button>
+            {% endif %}
+        </div>
+        <form id="excluir-conta-form" method="post" action="{% url 'excluir_conta' %}" style="display:none;">
+            {% csrf_token %}
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 S-beauty. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function confirmarExclusao() {
+
+            if (confirm("Tem certeza de que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
+
+                document.getElementById('excluir-conta-form').submit();
+            }
+        }
+    </script>
+
+</body>
+
+</html>
